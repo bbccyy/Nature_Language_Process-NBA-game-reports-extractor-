@@ -1,0 +1,56 @@
+//
+//  Patterns for sport event
+//
+
+pattern set score;
+
+score		:= win;
+
+// pattern for win:  <TEAM-A> win <TEAM-B>
+
+win 	:= win-noun | win-noun2 | win-verb | lose-noun | lose-noun2 | lose-noun3;
+
+// TEAM-A cWinNoun TEAM-B
+win-noun	:= (teams):Winteam [tagger]*
+				([constit cat=n pa=[head?isa(cWinNoun)]] | 
+				[constit cat=ngroup pa=[head?isa(cWinNoun)]] | 
+				"victory" | "demolition" | "beating" | "sweep" | "rout") [tagger]*
+				(teams):Loseteam;
+
+win-noun2	:= (teams):Winteam [tagger]* (teams):Loseteam [tagger]*
+				([constit cat=n pa=[head?isa(cWinNoun)]] | 
+				[constit cat=ngroup pa=[head?isa(cWinNoun)]] | 
+				"victory" | "demolition" | "beating" | "sweep" | "rout");
+
+
+// TEAM-A cWin TEAM-B
+win-verb	:= (teams):Winteam  [tagger]*
+				([constit cat=v pa=[head?isa(cWin)]] | [constit cat=vgroup pa=[head?isa(cWin)]]
+				| [constit cat=ven pa=[head?isa(cWin)]]) 
+				[tagger]* "the"? (teams):Loseteam;
+
+// lead TEAM-A to a cWinNoun over TEAM-B
+
+
+teams 		:=  "76ers" | "Clippers" | "Portland" | "Kings" | "Hornets" | "Rockets" | "Bucks" | "Denver" | "Atlanta" | "Boston" | "Brooklyn" | "New York" | "Philadelphia" | "Toronto"| "Chicago" | "Cleveland" | "Detroit" | "Indiana" | "Milwaukee" | "Charlotte" | "Miami" | "Orlando" | "Washington" | "Minnesota" | "Oklahoma" | "State" | "Orleans" | "Utah" | "Los Angeles Lakers" | "Phoenix" | "Sacramento" | "Houston" | "Memphis" | "Dallas" | "San Antonio" | "New Orleans" | "Golden State" | "OKC" | "POR" | "York" | "Celtics" | "Nets" | "Knicks" | "Cavaliers" | "Pistons" | "Pacers" | "Heats" | "Hawks" | "Raptors" | "Wizards" | "Nuggets" | "Timberwolves" | "Blazers" | "Jazz" | "Warriors" | "Thunder" | "Bulls" | "Lakers" | "Suns" | "Grizzlies" | "Mavericks" | "Spurs" | "Pelicans" | "Bobcats" | "Sixers" | "Heat" | "Magic" | "Antonio";
+
+when teams add [constit cat=ateam];
+
+lose-noun	:= (teams):Winteam [tagger]* (teams):Loseteam [tagger]*
+				([constit cat=ngroup pa=[head?isa(cLoseNoun)]] | 
+				[constit cat=n pa=[head?isa(cLoseNoun)]] | 
+				[constit cat=vgroup pa=[head?isa(cLose)]] | "loss");
+
+lose-noun2	:= (teams):Loseteam [tagger]* (teams):Winteam 
+				[constit cat=ngroup pa=[head?isa(cWinNoun)]];
+
+lose-noun3	:= (teams):Loseteam [tagger]* 
+				([constit cat=ngroup pa=[head?isa(cLoseNoun)]] | 
+				[constit cat=n pa=[head?isa(cLoseNoun)]] | 
+				[constit cat=vgroup pa=[head?isa(cLose)]] | "loss")
+				"to"? "the"? (teams):Winteam;
+
+
+
+//when score	write "winteam: " + Winteam + " loseteam: " + Loseteam; 
+when score add 	[constit cat=sportevent winteam=Winteam loseteam=Loseteam];	

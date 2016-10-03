@@ -1,0 +1,85 @@
+//
+//  Patterns for sport event - point
+//
+
+pattern set point;
+
+point 	:= socres-3 | socres-2 | socres-1 | scores0 | scores1 |
+			 scores2 | scores3 | scores4 | scores5 | scores6 | scores7;
+
+socres-3	:=  [ENAMEX]:Person ([constit cat=v pa=[head?isa(cScore)]] | 
+				[constit cat=vgroup pa=[head?isa(cScore)]])
+				[constit cat=q]:Scores ","; 
+
+socres-2	:=  [ENAMEX]:Person ([constit cat=v pa=[head?isa(cScore)]] | 
+				[constit cat=vgroup pa=[head?isa(cScore)]])
+				[constit cat=q]:Scores 
+				([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]) ("," | "and");
+
+socres-1	:=  [ENAMEX]:Person ([constit cat=v pa=[head?isa(cScore)]] | 
+				[constit cat=vgroup pa=[head?isa(cScore)]])
+				("a" | "his") pre-score ("of" | "with")? 
+				[constit cat=q]:Scores 
+				([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+scores0		:=  ([ENAMEX]|[constit cat=ngroup] | "Harden"):Person 
+				([constit cat=v pa=[head?isa(cScore)]] | [constit cat=vgroup pa=[head?isa(cScore)]]
+				| [constit cat=ven pa=[head?isa(cScore)]]) 
+				[constit cat=q]:Scores ([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+scores1		:= ([ENAMEX]|[constit cat=ngroup] | "Harden"):Person 
+				([constit cat=v pa=[head?isa(cScore)]] | [constit cat=vgroup pa=[head?isa(cScore)]])
+				"with"? ("a" | "his")? pre-score? ("of" | "with")? 
+				[constit cat=q]:Scores ([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+//Brian Roberts was the leading scorer with 18 points on Monday.
+scores2		:= ([ENAMEX]|[constit cat=ngroup]):Person [tagger]* ([constit cat=ngroup pa=[head?isa(cScoreNoun)]] | 
+				[constit cat=n pa=[head?isa(cScoreNoun)]]) "with" 
+				[constit cat=q]:Scores [constit cat=ngroup pa=[head=point number=plural]];
+
+//Gerald Henderson put in 17.
+scores3 	:= ([ENAMEX]|[constit cat=ngroup]):Person "put" "in" ("a" | "his")? pre-score? "of"? [constit cat=q]:Scores 
+				([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]])?;
+
+//Bradley Beal led Washington with 18 points
+scores4		:= ([ENAMEX]|[constit cat=ngroup]):Person "also"? mid?
+				([constit cat=vgroup pa=[head?isa(cScore)]] | [constit cat=ven pa=[head?isa(cScore)]] |
+				[constit cat=v pa=[head?isa(cScore)]])
+				[constit cat=ngroup]* "with" "a"? pre-score? 
+				[constit cat=q]:Scores [constit cat=ngroup pa=[head=point number=plural]];
+
+//Damian Lillard, who had 25 points
+scores5		:= ([ENAMEX]|[constit cat=ngroup]):Person ","? "who"
+				([constit cat=v pa=[head?isa(cScore)]] | [constit cat=vgroup pa=[head?isa(cScore)]])
+				"with"? ("a" | "his")? pre-score? 
+				[constit cat=q]:Scores ([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+//Barea scored 15 of his season-high 22 points
+scores6		:= ([ENAMEX]|[constit cat=ngroup]):Person [tagger]*
+				([constit cat=v pa=[head?isa(cScore)]] | [constit cat=vgroup pa=[head?isa(cScore)]])
+				[constit cat=q] "of" [tagger]* pre-score? [constit cat=q]:Scores 
+				([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+//Luol Deng made 11 of 14 shots and scored 29 points
+
+scores7		:= ([ENAMEX]|[constit cat=ngroup]):Person "made" 
+				[constit cat=q] "of" [constit cat=q] "shots" "and"?
+				([constit cat=v pa=[head?isa(cScore)]] | [constit cat=vgroup pa=[head?isa(cScore)]])
+				[constit cat=q]:Scores 
+				([constit cat=ngroup pa=[head=point number=plural]] | 
+				[constit cat=ngroup pa=[head=apiece]]);
+
+pre-score	:= "career" "-" "high" | "season" "-" "high" | "season" "highs" | "career" "highs"
+				| "season" "-" "highs" | "career" "-" "highs";
+
+mid			:= "," [tagger]+ ",";
+
+//when point 		write "Person: " + Person + " Scores: " + Scores;
+when point 		add [constit cat=pointevent player=Person points=Scores];

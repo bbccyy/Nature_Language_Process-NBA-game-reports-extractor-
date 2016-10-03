@@ -1,0 +1,4 @@
+cScore isa cEvent
+cScoreNoun isa cEvent
+cScore words score, add, have, lead, finish, had, tie
+cScoreNoun words scorer

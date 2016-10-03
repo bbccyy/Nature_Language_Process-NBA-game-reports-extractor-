@@ -1,0 +1,8 @@
+cWin isa cEvent
+cWinNoun isa cEvent
+cLose isa cEvent
+cLoseNoun isa cEvent
+cWin words hold, shock, beat, defeat, outlast, edge, rival, rout, pummel, lead, overtake, eliminate, finish, fend, top, rally, clinch, escape, brush
+cWinNoun words win, victory, demolition, sweep, beating
+cLose words lose, drop
+cLoseNoun words loss
